@@ -26,7 +26,7 @@ class AuthController {
       }
 
       //Verificar se o usuário ja existe
-      const userExists = await userModel.findByEmail(email);
+      const userExists = await userModel.findByemail(email);
       if (userExists) {
         return res.status(400).json({ error: "Este email já está em uso!" });
       }
