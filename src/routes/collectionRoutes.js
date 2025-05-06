@@ -1,6 +1,8 @@
 import express from "express";
 import CollectionController from "../controllers/collectionController.js";
 
+
+
 const collectionRouter = express.Router();
 
 // Rotas de Coleções
