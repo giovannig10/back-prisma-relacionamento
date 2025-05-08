@@ -1,25 +1,25 @@
 import express from "express";
 
-//Importar as rotas
+// Importar todas as rotas
 import authRouter from "./authRoutes.js";
 import animesRouter from "./animeRoutes.js";
+import personagensRouter from "./personagemRoutes.js";
 import collectionRouter from "./collectionRoutes.js";
-import cardRouter from "./cardRoutes.js"; // Importa as rotas de cartas
-import personagensRouter from "./personagensRoutes.js"; // Importa as rotas de personagens
+import cardRouter from "./cardRoutes.js";
 
-import authMiddleware from "../middlewares/authMiddleware.js"; // Importa o middleware de autenticação
+import authMiddleware from "../middleware/authMiddleware.js";
 
-const router = express.Router(); // Cria um novo roteador
+const router = express.Router();
 
-//Rotas públicas
-router.use("/auth", authRouter); // Usar as rotas de autenticação
+// Rotas públicas
+router.use("/auth", authRouter);
 router.use("/collections", collectionRouter);
-router.use("/cards", cardRouter); // Usar as rotas de cartas
+router.use("/cards", cardRouter);
 
-//Rotas privadas
-router.use(authMiddleware); // Aplica o middleware de autenticação para as rotas abaixo
+// Rotas protegidas
+router.use(authMiddleware);
 
-router.use("/animes", animesRouter); // Usar as rotas de animes
-router.use("/personagens", personagensRouter); // Usar as rotas de personagens
+router.use("/animes", animesRouter);
+router.use("/personagens", personagensRouter);
 
-export default router; // Exporta o roteador para ser usado em outros arquivos
+export default router;

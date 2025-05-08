@@ -1,10 +1,14 @@
-import cardModel from "../models/cardModel.js";
 import CardModel from "../models/cardModel.js";
-
 
 class CardController {
   // GET /cartas
   async getAllCards(req, res) {
+    const pagina = req.query.page;
+    console.log("pagina", pagina);
+
+    const limite = req.query.limit;
+    console.log("limite", limite);
+
     try {
       const cartas = await CardModel.findAll();
       res.json(cartas);
@@ -22,67 +26,68 @@ class CardController {
       const carta = await CardModel.findById(id);
 
       if (!carta) {
-        return res.status(404).json({ error: "Carta não encontrada" });
+        return res.status(404).json({ error: "Carta não encontrada!" });
       }
 
       res.json(carta);
     } catch (error) {
       console.error("Erro ao buscar carta:", error);
-      res.status(500).json({ error: "Erro ao buscar carta" });
+      res.status(500).json({ error: "Erro ao buscar carta!" });
     }
   }
 
   // POST /cartas
-  async createCard (req, res) {
+  async createCard(req, res) {
     try {
-      // Validação básica
+      // Captura dos dados do corpo da requisição (frontend)
       const {
-       name,
+        name,
         rarity,
         attackPoints,
         defensePoints,
         imageUrl,
-        collectionId
+        collectionId,
       } = req.body;
 
-      // Verifica se todos os campos do personagem foram fornecidos
+      // Verifica se todos os campos da carta foram fornecidos
       if (
         !name ||
         !rarity ||
         !attackPoints ||
         !defensePoints ||
         !collectionId
-
-        
       ) {
-        return res
-          .status(400)
-          .json({ error: "Os campos nome, raridade, ponto de ataque, ponto de defesa e o id da coleção são obrigatorios" });
+        return res.status(400).json({
+          error:
+            "Os campos nome, raridade, pontos de ataque, pontos de defesa e o id da coleção são obrigatórios",
+        });
       }
 
-      // Criar uma nova carta
-      const newCard = await cardModel.create(
+      // Criar a nova Carta
+      const newCard = await CardModel.create(
         name,
         rarity,
         attackPoints,
         defensePoints,
         imageUrl,
         collectionId
-
       );
 
       if (!newCard) {
-        return res.status(400).json({ error: "Erro ao criar card" });
+        return res.status(400).json({ error: "Erro ao criar carta" });
       }
 
-      res.status(201).json({message:"teste de massage", newCard});
+      res.status(201).json({
+        message: "Carta criada com sucesso",
+        newCard,
+      });
     } catch (error) {
-      console.error("Erro ao criar card:", error);
-      res.status(500).json({ error: "Erro ao criar card" });
+      console.error("Erro ao criar Carta:", error);
+      res.status(500).json({ error: "Erro ao criar Carta" });
     }
   }
 
-  // PUT /card/:id
+  // PUT /cartas/:id
   async updateCard(req, res) {
     try {
       const { id } = req.params;
@@ -92,10 +97,10 @@ class CardController {
         attackPoints,
         defensePoints,
         imageUrl,
-        collectionId
+        collectionId,
       } = req.body;
 
-      // Atualizar a coleção
+      // Atualizar a Carta
       const updatedCard = await CardModel.update(
         id,
         name,
@@ -107,32 +112,34 @@ class CardController {
       );
 
       if (!updatedCard) {
-        return res.status(404).json({ error: "Card não encontrado" });
+        return res.status(404).json({ error: "Carta não encontrada" });
       }
 
       res.json(updatedCard);
     } catch (error) {
-      console.error("Erro ao atualizar card:", error);
-      res.status(500).json({ error: "Erro ao atualizar card" });
+      console.error("Erro ao atualizar Carta:", error);
+      res.status(500).json({ error: "Erro ao atualizar Carta!" });
     }
   }
 
-  // DELETE /cartas/:id  '
+  // DELETE /cartas/:id
   async deleteCard(req, res) {
     try {
       const { id } = req.params;
 
-      // Remover a carta
-      const result = await cardModel.delete(id);
+      // Remover a Carta
+      const result = await CardModel.delete(id);
 
       if (!result) {
-        return res.status(404).json({ error: "Carta não encontrada" });
+        return res.status(404).json({ error: "Carta não encontrada!" });
       }
 
-      res.status(204).end(); // Resposta sem conteúdo
+      res.status(200).json({
+        message: "Carta removida com sucesso",
+      });
     } catch (error) {
-      console.error("Erro ao remover carta:", error);
-      res.status(500).json({ error: "Erro ao remover carta" });
+      console.error("Erro ao remover Carta:", error);
+      res.status(500).json({ error: "Erro ao remover Carta!" });
     }
   }
 }
